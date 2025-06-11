@@ -11,7 +11,7 @@ interface ResultSectionProps {
 
 export default function ResultSection({ userId }: ResultSectionProps) {
   const [copied, setCopied] = useState(false)
-  
+
   const getBaseUrl = () => {
   if (typeof window !== "undefined") {
     return window.location.origin
