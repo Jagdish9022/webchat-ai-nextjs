@@ -5,17 +5,23 @@ import { motion } from "framer-motion"
 import { Copy, MessageCircle, Check, ExternalLink, Code2 } from "lucide-react"
 import { CheckCircle } from "lucide-react"
 import { toast } from "@/components/ui/toast"
-
 interface ResultSectionProps {
   userId: string
 }
 
 export default function ResultSection({ userId }: ResultSectionProps) {
   const [copied, setCopied] = useState(false)
+  
+  const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return window.location.origin
+  }
+  return "http://localhost:3000" // Fallback for SSR or unexpected cases
+}
 
-  // Updated iframe code with transparent background
+const baseUrl = getBaseUrl()
   const iframeCode = `<iframe
-  src="http://localhost:3000/chatbot?collection_name=${userId}"
+  src="${baseUrl}/chatbot?collection_name=${userId}"
   width="400"
   height="600"
   style="background: transparent !important; border: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; border-radius: 12px; overflow: hidden;"
