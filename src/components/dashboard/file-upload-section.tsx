@@ -7,6 +7,8 @@ import { Upload, X, FileText } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "@/components/ui/toast"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+
 interface FileUploadSectionProps {
   userId: string
   onStartProcessing: (isProcessing: boolean) => void
@@ -46,7 +48,7 @@ export default function FileUploadSection({ userId, onStartProcessing }: FileUpl
         formData.append("collection_name", userId) // Ensure files are added to the user's collection
 
         try {
-          const response = await fetch("http://localhost:8000/api/upload-and-process", {
+          const response = await fetch(`${API_BASE_URL}/upload-and-process`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,

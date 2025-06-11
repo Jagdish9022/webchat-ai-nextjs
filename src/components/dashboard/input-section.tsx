@@ -6,6 +6,8 @@ import { useState } from "react"
 import { Globe, Upload, Play, X } from "lucide-react"
 import { motion } from "framer-motion"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+
 interface InputSectionProps {
   onStartProcessing: (taskId: string) => void
   userId: string
@@ -39,7 +41,7 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
       const token = localStorage.getItem("authToken")
 
       // First, process the website URL
-      const response = await fetch("http://localhost:8000/api/scrape-and-ingest", {
+      const response = await fetch(`${API_BASE_URL}/scrape-and-ingest`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +75,7 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
       formData.append("file", file)
 
       try {
-        const response = await fetch("http://localhost:8000/api/upload-and-process", {
+        const response = await fetch(`${API_BASE_URL}/upload-and-process`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

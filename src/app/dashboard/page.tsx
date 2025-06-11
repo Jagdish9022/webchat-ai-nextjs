@@ -13,6 +13,8 @@ import FileUploadSection from "@/components/dashboard/file-upload-section"
 import { useAuth } from "@/hooks/use-auth"
 import { toast } from "@/components/ui/toast"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isLoading } = useAuth()
@@ -45,7 +47,7 @@ export default function DashboardPage() {
     if (currentTaskId && showLoader) {
       const checkProgress = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/api/scraping-progress/${currentTaskId}`)
+          const response = await fetch(`${API_BASE_URL}/scraping-progress/${currentTaskId}`)
           if (response.ok) {
             const data = await response.json()
             console.log("Progress data:", data)
