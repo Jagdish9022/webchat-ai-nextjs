@@ -5,6 +5,8 @@ import { motion } from "framer-motion"
 import { Globe, Cog, Brain, Database, CheckCircle, Clock, AlertCircle } from "lucide-react"
 import { toast } from "@/components/ui/toast"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+
 interface ProgressSectionProps {
   taskId: string
   onComplete: (data: any) => void
@@ -67,7 +69,7 @@ export default function ProgressSection({ taskId, onComplete }: ProgressSectionP
 
     const fetchProgress = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/scraping-progress/${taskId}`)
+        const response = await fetch(`${API_BASE_URL}/scraping-progress/${taskId}`)
         if (response.ok) {
           const data: ProgressData = await response.json()
           console.log("Progress data:", data) // Debug log

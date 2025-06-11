@@ -4,6 +4,8 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { MessageCircle, Send, X, Bot, User, Palette, Mail, Linkedin, Phone, Globe } from "lucide-react"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+
 interface Message {
   id: number
   text: string
@@ -21,7 +23,7 @@ interface ChatBotProps {
 
 const ChatBot: React.FC<ChatBotProps> = ({
   collectionName = "baapcompany",
-  apiUrl = "http://127.0.0.1:8000/api/ask-question",
+  apiUrl = `${API_BASE_URL}/ask-question`,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
