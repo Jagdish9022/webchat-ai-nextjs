@@ -20,6 +20,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        "afacad-flux": ["var(--font-afacad-flux)", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

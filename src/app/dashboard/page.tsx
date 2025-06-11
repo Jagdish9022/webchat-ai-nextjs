@@ -96,14 +96,14 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 font-afacad-flux">
         <motion.div
           className="text-center"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4 font-afacad-flux"></div>
           <p className="text-gray-600 font-medium">Loading your dashboard...</p>
         </motion.div>
       </div>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 font-afacad-flux">
       <DashboardHeader user={user} />
 
       <main className="container mx-auto px-4 py-8 space-y-8">
@@ -127,13 +127,13 @@ export default function DashboardPage() {
         >
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-2 rounded-full">
             <Sparkles className="w-5 h-5 text-blue-600" />
-            <span className="text-blue-800 font-medium text-sm">AI-Powered Chatbot Builder</span>
+            <span className="text-blue-800 font-medium text-sm font-afacad-flux">AI-Powered Chatbot Builder</span>
           </div>
 
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent font-afacad-flux">
             Create Your AI Chatbot
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-afacad-flux">
             Transform any website into an intelligent chatbot that understands your content and provides instant,
             accurate responses to your visitors.
           </p>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                 className={`flex items-center space-x-2 bg-gradient-to-r ${feature.color} text-white px-4 py-2 rounded-full shadow-lg`}
               >
                 <feature.icon className="w-4 h-4" />
-                <span className="font-medium text-sm">{feature.text}</span>
+                <span className="font-medium text-sm font-afacad-flux">{feature.text}</span>
               </motion.div>
             ))}
           </div>

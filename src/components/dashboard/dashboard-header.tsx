@@ -1,5 +1,3 @@
-"use client"
-
 import { LogOut, LucideUser } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -26,10 +24,10 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">W</span>
+              <span className="text-white font-bold text-lg"><img src="image.png" alt="" /></span>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              WebChat AI
+              BAAP AI
             </h1>
           </div>
 
