@@ -261,45 +261,48 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button - Smaller Size */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br ${currentTheme.primary} rounded-full shadow-2xl hover:shadow-emerald-500/25 transform hover:scale-110 transition-all duration-300 flex items-center justify-center z-50 ${isOpen ? "hidden" : "block"} ring-2 ring-white/20`}
+        className={`fixed bottom-6 right-6 w-12 h-12 bg-gradient-to-br ${currentTheme.primary} rounded-full shadow-2xl hover:shadow-emerald-500/25 transform hover:scale-110 transition-all duration-300 flex items-center justify-center z-50 ${isOpen ? "hidden" : "block"} ring-2 ring-white/20`}
       >
-        <MessageCircle className="w-7 h-7 text-white" />
+        <MessageCircle className="w-6 h-6 text-white" />
       </button>
 
-      {/* Chat Window */}
+      {/* Chat Window - Smaller Size */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-[420px] h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden">
+        <div className="fixed bottom-6 right-6 w-[350px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden">
           {/* Enhanced Header */}
-          <div className={`bg-gradient-to-r ${currentTheme.primary} text-white p-5 flex justify-between items-center`}>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="w-6 h-6" />
+          <div className={`bg-gradient-to-r ${currentTheme.primary} text-white p-3 flex justify-between items-center`}>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">AI Assistant</h3>
+                <h3 className="font-semibold text-base">AI Assistant</h3>
                 <p className="text-xs text-white/80">Always here to help</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <button
                 onClick={() => setShowSettings(!showSettings)}
-                className="hover:bg-white/20 rounded-full p-2 transition-colors"
+                className="hover:bg-white/20 rounded-full p-1.5 transition-colors"
               >
-                <Palette className="w-5 h-5" />
+                <Palette className="w-4 h-4" />
               </button>
-              <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 rounded-full p-2 transition-colors">
-                <X className="w-5 h-5" />
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:bg-white/20 rounded-full p-1.5 transition-colors"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
           {/* Theme Selector */}
           {showSettings && (
-            <div className="p-4 border-b border-gray-100 bg-gray-50 max-h-32 overflow-y-auto">
-              <p className="text-sm font-medium text-gray-700 mb-2">Choose Theme:</p>
+            <div className="p-3 border-b border-gray-100 bg-gray-50 max-h-28 overflow-y-auto">
+              <p className="text-xs font-medium text-gray-700 mb-2">Choose Theme:</p>
               <div className="grid grid-cols-2 gap-2">
                 {Object.keys(themes).map((themeName) => {
                   const themeData = themes[themeName as keyof typeof themes]
@@ -309,7 +312,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                       onClick={() => setTheme(themeName)}
                       className={`px-2 py-1 rounded-full text-xs font-medium capitalize transition-colors text-white ${
                         theme === themeName
-                          ? `${themeData.themeButton} ring-2 ring-gray-400`
+                          ? `${themeData.themeButton} ring-1 ring-gray-400`
                           : `${themeData.themeButton} opacity-70 hover:opacity-100`
                       }`}
                     >
@@ -322,53 +325,48 @@ const ChatBot: React.FC<ChatBotProps> = ({
           )}
 
           {/* Messages */}
-          <div className={`flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b ${currentTheme.secondary}`}>
+          <div className={`flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b ${currentTheme.secondary}`}>
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex flex-col space-y-1 ${message.isUser ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`flex items-start space-x-3 ${message.isUser ? "flex-row-reverse space-x-reverse" : ""}`}
+                  className={`flex items-start space-x-2 ${message.isUser ? "flex-row-reverse space-x-reverse" : ""}`}
                 >
                   {/* Avatar */}
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
                       message.isUser
                         ? currentTheme.userBubble.replace("bg-gradient-to-br", "bg-gradient-to-br")
                         : `bg-gradient-to-br ${currentTheme.primary}`
                     }`}
                   >
-                    {message.isUser ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
+                    {message.isUser ? <User className="w-3 h-3 text-white" /> : <Bot className="w-3 h-3 text-white" />}
                   </div>
 
                   <div className={`flex flex-col max-w-[85%] ${message.isUser ? "items-end" : "items-start"}`}>
-                    {/* Sender Label */}
-                    <span className={`text-xs font-medium ${currentTheme.accent} mb-1`}>
-                      {message.isUser ? "You" : "AI"}
-                    </span>
-
                     {/* Message Bubble */}
                     <div
-                      className={`px-4 py-3 rounded-2xl shadow-sm border ${
+                      className={`px-3 py-2 rounded-xl shadow-sm border text-sm ${
                         message.isUser
                           ? `${currentTheme.userBubble} text-white`
                           : "bg-white text-gray-800 border-gray-200 shadow-md"
                       }`}
                     >
-                      <div className="text-sm leading-relaxed font-medium">
+                      <div className="text-xs leading-relaxed font-medium">
                         {message.isUser ? message.text : formatMessage(message.text)}
                       </div>
                     </div>
 
                     {/* Action Buttons */}
                     {!message.isUser && message.buttons && message.buttonType && message.buttonData && (
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex flex-wrap gap-1 mt-1">
                         {message.buttonType.map((type, index) => (
                           <button
                             key={index}
                             onClick={() => handleButtonClick(type, message.buttonData![index])}
-                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${currentTheme.button} text-white hover:scale-105 transform`}
+                            className={`flex items-center space-x-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors ${currentTheme.button} text-white hover:scale-105 transform`}
                           >
                             {getButtonIcon(type)}
                             <span className="capitalize">{type}</span>
@@ -380,7 +378,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
                 </div>
 
                 {/* Time below message */}
-                <div className={`text-xs text-gray-400 ${message.isUser ? "mr-11" : "ml-11"}`}>
+                <div className={`text-[10px] text-gray-400 ${message.isUser ? "mr-8" : "ml-8"}`}>
                   {formatTime(message.timestamp)}
                 </div>
               </div>
@@ -388,56 +386,55 @@ const ChatBot: React.FC<ChatBotProps> = ({
 
             {isLoading && (
               <div className="flex flex-col space-y-1 items-start">
-                <div className="flex items-start space-x-3">
+                <div className="flex items-start space-x-2">
                   <div
-                    className={`w-8 h-8 bg-gradient-to-br ${currentTheme.primary} rounded-full flex items-center justify-center`}
+                    className={`w-6 h-6 bg-gradient-to-br ${currentTheme.primary} rounded-full flex items-center justify-center`}
                   >
-                    <Bot className="w-4 h-4 text-white" />
+                    <Bot className="w-3 h-3 text-white" />
                   </div>
                   <div className="flex flex-col">
-                    <span className={`text-xs font-medium ${currentTheme.accent} mb-1`}>AI</span>
-                    <div className="bg-white border border-gray-200 shadow-md px-4 py-3 rounded-2xl">
+                    <div className="bg-white border border-gray-200 shadow-md px-3 py-2 rounded-xl">
                       <div className="flex items-center space-x-2">
                         <div className="flex space-x-1">
-                          <div className={`w-2 h-2 ${currentTheme.dots[0]} rounded-full animate-bounce`}></div>
+                          <div className={`w-1.5 h-1.5 ${currentTheme.dots[0]} rounded-full animate-bounce`}></div>
                           <div
-                            className={`w-2 h-2 ${currentTheme.dots[1]} rounded-full animate-bounce`}
+                            className={`w-1.5 h-1.5 ${currentTheme.dots[1]} rounded-full animate-bounce`}
                             style={{ animationDelay: "0.1s" }}
                           ></div>
                           <div
-                            className={`w-2 h-2 ${currentTheme.dots[2]} rounded-full animate-bounce`}
+                            className={`w-1.5 h-1.5 ${currentTheme.dots[2]} rounded-full animate-bounce`}
                             style={{ animationDelay: "0.2s" }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-500 font-medium">AI is typing...</span>
+                        <span className="text-xs text-gray-500 font-medium">AI is typing...</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 ml-11">{formatTime(new Date())}</div>
+                <div className="text-[10px] text-gray-400 ml-8">{formatTime(new Date())}</div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Enhanced Input */}
-          <div className="p-5 border-t border-gray-100 bg-white">
-            <div className="flex space-x-3">
+          <div className="p-3 border-t border-gray-100 bg-white">
+            <div className="flex space-x-2">
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your question..."
-                className={`flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 ${currentTheme.focusRing} text-sm font-medium placeholder-gray-400 shadow-sm`}
+                className={`flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 ${currentTheme.focusRing} text-xs font-medium placeholder-gray-400 shadow-sm`}
                 disabled={isLoading}
               />
               <button
                 onClick={sendMessage}
                 disabled={isLoading || !inputValue.trim()}
-                className={`${currentTheme.button} text-white p-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:scale-105`}
+                className={`${currentTheme.button} text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:scale-105`}
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-4 h-4" />
               </button>
             </div>
           </div>

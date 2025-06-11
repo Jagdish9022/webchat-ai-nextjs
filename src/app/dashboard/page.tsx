@@ -6,18 +6,21 @@ import { motion } from "framer-motion"
 import { Sparkles, Zap, Target } from "lucide-react"
 import DashboardHeader from "@/components/dashboard/dashboard-header"
 import InputSection from "@/components/dashboard/input-section"
-import ProgressSection from "@/components/dashboard/progress-section"
+import SimpleLoader from "@/components/dashboard/simple-loader"
 import ResultSection from "@/components/dashboard/result-section"
 import ExistingChatbot from "@/components/dashboard/existing-chatbot"
+import FileUploadSection from "@/components/dashboard/file-upload-section"
 import { useAuth } from "@/hooks/use-auth"
+import { toast } from "@/components/ui/toast"
 
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isLoading } = useAuth()
-  const [showProgress, setShowProgress] = useState(false)
+  const [showLoader, setShowLoader] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null)
   const [existingChatbot, setExistingChatbot] = useState<any>(null)
+  const [hasShownCompletionToast, setHasShownCompletionToast] = useState(false)
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -34,6 +37,60 @@ export default function DashboardPage() {
       }
     }
   }, [user])
+
+  // Progress tracking function
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+
+    if (currentTaskId && showLoader) {
+      const checkProgress = async () => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/scraping-progress/${currentTaskId}`)
+          if (response.ok) {
+            const data = await response.json()
+            console.log("Progress data:", data)
+
+            if (data.status === "completed" || data.is_completed) {
+              clearInterval(interval)
+              setShowLoader(false)
+              setShowResult(true)
+
+              // Show completion toast only once
+              if (!hasShownCompletionToast) {
+                toast.success("Chatbot Created!", "Your AI chatbot is ready to use!")
+                setHasShownCompletionToast(true)
+              }
+
+              // Save chatbot data
+              const chatbotData = {
+                userId: user?.id,
+                createdAt: new Date().toISOString(),
+                ...data,
+              }
+              localStorage.setItem(`chatbot_${user?.id}`, JSON.stringify(chatbotData))
+              setExistingChatbot(chatbotData)
+            } else if (data.status === "error" || data.error) {
+              clearInterval(interval)
+              setShowLoader(false)
+              toast.error("Processing Failed", data.error || "An error occurred during processing")
+            }
+          }
+        } catch (error) {
+          console.error("Error checking progress:", error)
+        }
+      }
+
+      // Check immediately and then every 3 seconds
+      checkProgress()
+      interval = setInterval(checkProgress, 3000)
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
+  }, [currentTaskId, showLoader, user?.id, hasShownCompletionToast])
 
   if (isLoading) {
     return (
@@ -100,47 +157,37 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
-        {existingChatbot && (
-          <ExistingChatbot chatbot={existingChatbot} userId={user.id} onShowResult={() => setShowResult(true)} />
+        {/* Main Content Area */}
+        {existingChatbot && !showLoader && (
+          <>
+            <ExistingChatbot chatbot={existingChatbot} userId={user.id} onShowResult={() => setShowResult(true)} />
+
+            {/* File Upload Section for Existing Chatbot */}
+            <FileUploadSection
+              userId={user.id}
+              onStartProcessing={(isProcessing) => {
+                setShowLoader(isProcessing)
+                setHasShownCompletionToast(false)
+              }}
+            />
+          </>
         )}
 
-        <InputSection
-          onStartProcessing={(taskId) => {
-            setCurrentTaskId(taskId)
-            setShowProgress(true)
-            setShowResult(false)
-          }}
-          userId={user.id}
-        />
-
-        {showProgress && currentTaskId && (
-          <ProgressSection
-            taskId={currentTaskId}
-            onComplete={(data) => {
-              setShowProgress(false)
-              setShowResult(true)
-              // Save chatbot data
-              const chatbotData = {
-                userId: user.id,
-                createdAt: new Date().toISOString(),
-                ...data,
-              }
-              localStorage.setItem(`chatbot_${user.id}`, JSON.stringify(chatbotData))
-              setExistingChatbot(chatbotData)
-            }}
-          />
-        )}
-
-        {showResult && (
-          <ResultSection
-            userId={user.id}
-            onCreateAnother={() => {
+        {!existingChatbot && !showLoader && !showResult && (
+          <InputSection
+            onStartProcessing={(taskId) => {
+              setCurrentTaskId(taskId)
+              setShowLoader(true)
               setShowResult(false)
-              setShowProgress(false)
-              setCurrentTaskId(null)
+              setHasShownCompletionToast(false) // Reset toast flag
             }}
+            userId={user.id}
           />
         )}
+
+        {showLoader && <SimpleLoader />}
+
+        {showResult && <ResultSection userId={user.id} />}
       </main>
     </div>
   )

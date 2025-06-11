@@ -37,7 +37,9 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
 
     try {
       const token = localStorage.getItem("authToken")
-      const response = await fetch("http://127.0.0.1:8000/api/scrape-and-ingest", {
+
+      // First, process the website URL
+      const response = await fetch("http://localhost:8000/api/scrape-and-ingest", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,14 +51,45 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
       const data = await response.json()
 
       if (response.ok) {
+        // If there are files to upload, process them after the URL
+        if (files.length > 0) {
+          await processUploadedFiles(token)
+        }
+
         onStartProcessing(data.task_id)
       } else {
         alert(data.detail || "Failed to start processing")
+        setIsLoading(false)
       }
     } catch (error) {
       alert("Network error. Please try again.")
-    } finally {
       setIsLoading(false)
+    }
+  }
+
+  const processUploadedFiles = async (token: string | null) => {
+    for (const file of files) {
+      const formData = new FormData()
+      formData.append("file", file)
+
+      try {
+        const response = await fetch("http://localhost:8000/api/upload-and-process", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          console.error("File upload error:", errorData)
+          throw new Error(errorData.detail || `Failed to process ${file.name}`)
+        }
+      } catch (error) {
+        console.error("Error uploading file:", file.name, error)
+        // Continue with other files even if one fails
+      }
     }
   }
 
@@ -79,7 +112,8 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com"
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            disabled={isLoading}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -95,10 +129,14 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
               multiple
               accept=".pdf,.txt,.doc,.docx,.svg"
               onChange={handleFileUpload}
+              disabled={isLoading}
               className="hidden"
               id="file-upload"
             />
-            <label htmlFor="file-upload" className="cursor-pointer">
+            <label
+              htmlFor="file-upload"
+              className={`cursor-pointer ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+            >
               <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-gray-600">Click to upload or drag files here</p>
               <p className="text-sm text-gray-400 mt-1">Supported: PDF, TXT, DOC, DOCX, SVG</p>
@@ -111,7 +149,11 @@ export default function InputSection({ onStartProcessing, userId }: InputSection
               {files.map((file, index) => (
                 <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                   <span className="text-sm text-gray-700">{file.name}</span>
-                  <button onClick={() => removeFile(index)} className="text-red-500 hover:text-red-700">
+                  <button
+                    onClick={() => removeFile(index)}
+                    disabled={isLoading}
+                    className="text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 </div>

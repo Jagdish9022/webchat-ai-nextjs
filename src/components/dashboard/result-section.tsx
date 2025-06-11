@@ -2,23 +2,22 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Copy, Plus, MessageCircle, Check, ExternalLink, Code2 } from "lucide-react"
+import { Copy, MessageCircle, Check, ExternalLink, Code2 } from "lucide-react"
 import { CheckCircle } from "lucide-react"
 import { toast } from "@/components/ui/toast"
 
 interface ResultSectionProps {
   userId: string
-  onCreateAnother: () => void
 }
 
-export default function ResultSection({ userId, onCreateAnother }: ResultSectionProps) {
+export default function ResultSection({ userId }: ResultSectionProps) {
   const [copied, setCopied] = useState(false)
 
   // Updated iframe code with transparent background
   const iframeCode = `<iframe
   src="http://localhost:3000/chatbot?collection_name=${userId}"
-  width="500"
-  height="800"
+  width="400"
+  height="600"
   style="background: transparent !important; border: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; border-radius: 12px; overflow: hidden;"
   allowtransparency="true"
   frameborder="0"
@@ -33,7 +32,6 @@ export default function ResultSection({ userId, onCreateAnother }: ResultSection
   }
 
   const testChatbot = () => {
-    // Updated URL to use correct port
     const chatbotUrl = `http://localhost:3000/chatbot?collection_name=${userId}`
     window.open(chatbotUrl, "_blank")
   }
@@ -132,23 +130,13 @@ export default function ResultSection({ userId, onCreateAnother }: ResultSection
         </div>
       </motion.div>
 
-      {/* Action Buttons */}
+      {/* Action Button - Only Test Chatbot */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-4 justify-center"
+        className="flex justify-center"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        <motion.button
-          onClick={onCreateAnother}
-          className="flex items-center justify-center space-x-2 px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <Plus className="w-5 h-5" />
-          <span>Create Another Chatbot</span>
-        </motion.button>
-
         <motion.button
           onClick={testChatbot}
           className="flex items-center justify-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:shadow-lg font-medium"
